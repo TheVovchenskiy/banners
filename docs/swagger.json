@@ -1,0 +1,16 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is the first version of Banners API",
+        "title": "Banners API",
+        "contact": {
+            "name": "Vladimir Konoplyuk",
+            "url": "https://github.com/TheVovchenskiy",
+            "email": "konoplyuk.v@yandex.ru"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
+    "paths": {}
+}

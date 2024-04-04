@@ -1,0 +1,12 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact:
+    email: konoplyuk.v@yandex.ru
+    name: Vladimir Konoplyuk
+    url: https://github.com/TheVovchenskiy
+  description: This is the first version of Banners API
+  title: Banners API
+  version: "1.0"
+paths: {}
+swagger: "2.0"

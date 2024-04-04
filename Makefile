@@ -29,3 +29,12 @@ migrate:
 .PHONY: rollback
 rollback:
 	dotenv -- tern migrate -m migrations/ -d -1
+
+
+.PHONY: swag-init
+swag-init:
+	swag init -d cmd/banners/
+
+.PHONY: run
+run:
+	go run cmd/banners/main.go
