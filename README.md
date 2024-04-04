@@ -1,15 +1,26 @@
-# Banners service <!-- omit from toc -->
+# Banner service <!-- omit from toc -->
+
+## Table of contents <!-- omit from toc -->
+- [1. About](#1-about)
+  - [1.1. Stack](#11-stack)
+- [2. Getting started](#2-getting-started)
+  - [2.1. Additioanl tools](#21-additioanl-tools)
+  - [2.2. Docker](#22-docker)
+  - [2.3. Migrations](#23-migrations)
+
+## 1. About
 
 This is a repository with a completed test task for Backend internsheep in Avito.
 
-## Table of contents <!-- omit from toc -->
-- [1. Starting](#1-starting)
-  - [1.1. Additioanl tools](#11-additioanl-tools)
-  - [1.2. Docker](#12-docker)
-  - [1.3. Migrations](#13-migrations)
+### 1.1. Stack
 
+Here are some main technologies used in this project:
 
-## 1. Starting
+- main language - `Go`
+- main database - `Postgresql`
+- deploy - `Docker` and `Docker compose`
+
+## 2. Getting started
 
 You will need to create `.env` file in the root directory of this repository with the following format:
 
@@ -21,11 +32,11 @@ PG_PORT=<your_postgres_port>
 SECRET_KEY=<your_secret_key_to_generate_jwt>
 ```
 
-### 1.1. Additioanl tools
+### 2.1. Additioanl tools
 
-Additional tools you may need to run this project with commands to install them:
+Additional tools you may need to install for this project with commands to install them:
 
-- [Tern](https://github.com/jackc/tern) - migration tool for PostgreSQL
+- [tern](https://github.com/jackc/tern) - migration tool for PostgreSQL
 ```bash
 make install-tern
 ```
@@ -34,14 +45,14 @@ make install-tern
 make install-dotenv
 ```
 
-### 1.2. Docker
+### 2.2. Docker
 
-To run all necessary docker containers run:
+To run all necessary Docker containers run:
 ```bash
 make compose-up
 ```
 
-### 1.3. Migrations
+### 2.3. Migrations
 
 To update db to the latest migration  run:
 ```bash
