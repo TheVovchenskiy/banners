@@ -1,3 +1,11 @@
+.PHONY: dotenv
+dotenv:
+	echo "PG_USER=<your_postgres_user>\n\
+	PG_PASSWORD=<your_postgres_user_password>\n\
+	PG_DBNAME=<your_postgres_db_name>\n\
+	PG_PORT=<your_postgres_port>\n\
+	SECRET_KEY=<your_secret_key_to_generate_jwt>" > .env
+
 .PHONY: install-tern
 install-tern:
 	go install github.com/jackc/tern/v2@latest

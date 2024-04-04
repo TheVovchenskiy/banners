@@ -32,6 +32,12 @@ PG_PORT=<your_postgres_port>
 SECRET_KEY=<your_secret_key_to_generate_jwt>
 ```
 
+To create this `.env` template simply run:
+
+```bash
+make dotenv
+```
+
 ### 2.1. Additioanl tools
 
 Additional tools you may need to install for this project with commands to install them:
