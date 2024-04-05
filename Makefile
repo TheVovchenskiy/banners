@@ -32,7 +32,7 @@ rollback:
 
 .PHONY: swag
 swag:
-	swag init -d "./cmd/banners/,./internal/rest,./model" --parseInternal --parseDependency
+	swag init -d "./cmd/banners/,./internal/rest,./model,./pkg/serverErrors" --parseInternal --parseDependency
 
 .PHONY: fmt-docs
 fmt-docs:
@@ -41,3 +41,11 @@ fmt-docs:
 .PHONY: run
 run:
 	go run cmd/banners/main.go
+
+.PHONY: test
+test:
+	go test -coverpkg=./... -coverprofile=c.out.tmp ./...
+
+.PHONY: cover
+cover: test
+	go tool cover -func=c.out.tmp

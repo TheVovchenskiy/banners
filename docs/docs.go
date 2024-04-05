@@ -78,7 +78,10 @@ const docTemplate = `{
                         "description": "Forbidden"
                     },
                     "500": {
-                        "description": "Internal server error"
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/serverErrors.APIError"
+                        }
                     }
                 }
             }
@@ -133,6 +136,14 @@ const docTemplate = `{
                 "updatedAt": {
                     "type": "string",
                     "format": "date-time"
+                }
+            }
+        },
+        "serverErrors.APIError": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
                 }
             }
         }

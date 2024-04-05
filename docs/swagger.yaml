@@ -35,6 +35,11 @@ definitions:
         format: date-time
         type: string
     type: object
+  serverErrors.APIError:
+    properties:
+      error:
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -84,6 +89,8 @@ paths:
           description: Forbidden
         "500":
           description: Internal server error
+          schema:
+            $ref: '#/definitions/serverErrors.APIError'
       summary: Handle getting list of banners
       tags:
       - banners

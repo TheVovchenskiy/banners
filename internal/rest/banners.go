@@ -28,7 +28,7 @@ func NewBannerHandler() *BannerHandler {
 //	@Success		200			{array}	model.Banner	"An array of banners"
 //	@Failure		401			"User is unauthorized"
 //	@Failure		403			"Forbidden"
-//	@Failure		500			"Internal server error"
+//	@Failure		500			{object} serverErrors.APIError "Internal server error"
 //	@Router			/banners [get]
 func (handler *BannerHandler) HandleGetBanners(w http.ResponseWriter, r *http.Request) {
 }
