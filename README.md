@@ -11,6 +11,7 @@
   - [3.1. Documentation](#31-documentation)
 - [4. Additional problems and questions](#4-additional-problems-and-questions)
   - [4.1. Bad naming of endpoints](#41-bad-naming-of-endpoints)
+  - [4.2. Additional fields](#42-additional-fields)
 
 ## 1. About
 
@@ -92,3 +93,10 @@ Here are additional problems and questions that I encountered, and my logic for 
 ### 4.1. Bad naming of endpoints
 
 According to given [API](https://drive.google.com/file/d/1l4PMTPzsjksRCd_lIm0mVfh4U0Jn-A2R/view) there must be 2 endpoints: `/banner` and `/banner/{id}` but this is a bad example of [API naming](https://medium.com/@nadinCodeHat/rest-api-naming-conventions-and-best-practices-1c4e781eb6a5), that is why I changed its names to plural: `/banners` and `/banners/{id}`.
+
+### 4.2. Additional fields
+
+To improve data readability I added additional fields for the following entities:
+
+- `feature` - added field `description`
+- `tag` - added field `name`
