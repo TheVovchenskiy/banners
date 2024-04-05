@@ -1,4 +1,40 @@
 basePath: /api/v1
+definitions:
+  model.Banner:
+    properties:
+      content:
+        example: '{"title": "some_title", "text": "some_text", "url": "some_url"}'
+        type: string
+      createdAt:
+        format: date-time
+        type: string
+      featureId:
+        type: integer
+      id:
+        type: integer
+      isActive:
+        type: boolean
+      tags:
+        items:
+          $ref: '#/definitions/model.Tag'
+        type: array
+      updatedAt:
+        format: date-time
+        type: string
+    type: object
+  model.Tag:
+    properties:
+      createdAt:
+        format: date-time
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updatedAt:
+        format: date-time
+        type: string
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -8,5 +44,47 @@ info:
   description: This is the first version of Banners API
   title: Banners API
   version: "1.0"
-paths: {}
+paths:
+  /banners:
+    get:
+      description: Get all banners with filtering by feature and/or tag
+      parameters:
+      - description: Admin's token
+        in: header
+        name: token
+        type: string
+      - description: Feature's id
+        in: query
+        name: feature_id
+        type: integer
+      - description: Tags's id
+        in: query
+        name: tag_id
+        type: integer
+      - description: Limit
+        in: query
+        name: limit
+        type: integer
+      - description: Offset
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: An array of banners
+          schema:
+            items:
+              $ref: '#/definitions/model.Banner'
+            type: array
+        "401":
+          description: User is unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal server error
+      summary: Handle getting list of banners
+      tags:
+      - banners
 swagger: "2.0"

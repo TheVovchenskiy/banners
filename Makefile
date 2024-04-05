@@ -30,10 +30,13 @@ migrate:
 rollback:
 	dotenv -- tern migrate -m migrations/ -d -1
 
+.PHONY: swag
+swag:
+	swag init -d "./cmd/banners/,./internal/rest,./model" --parseInternal --parseDependency
 
-.PHONY: swag-init
-swag-init:
-	swag init -d cmd/banners/
+.PHONY: fmt-docs
+fmt-docs:
+	swag fmt -d "cmd/banners,."
 
 .PHONY: run
 run:

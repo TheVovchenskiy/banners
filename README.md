@@ -7,6 +7,10 @@
   - [2.1. Additioanl tools](#21-additioanl-tools)
   - [2.2. Docker](#22-docker)
   - [2.3. Migrations](#23-migrations)
+- [3. Usage](#3-usage)
+  - [3.1. Documentation](#31-documentation)
+- [4. Additional problems and questions](#4-additional-problems-and-questions)
+  - [4.1. Bad naming of endpoints](#41-bad-naming-of-endpoints)
 
 ## 1. About
 
@@ -74,3 +78,17 @@ To create a new migration run:
 ```bash
 make create-migration name=<name_of_migration>
 ```
+
+## 3. Usage
+
+### 3.1. Documentation
+
+To get documentation on Banners API follow `http://localhost:8081/swagger/index.html` url while app is running.
+
+## 4. Additional problems and questions
+
+Here are additional problems and questions that I encountered, and my logic for solving them.
+
+### 4.1. Bad naming of endpoints
+
+According to given [API](https://drive.google.com/file/d/1l4PMTPzsjksRCd_lIm0mVfh4U0Jn-A2R/view) there must be 2 endpoints: `/banner` and `/banner/{id}` but this is a bad example of [API naming](https://medium.com/@nadinCodeHat/rest-api-naming-conventions-and-best-practices-1c4e781eb6a5), that is why I changed its names to plural: `/banners` and `/banners/{id}`.
