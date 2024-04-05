@@ -1,6 +1,7 @@
 package response_test
 
 import (
+	"context"
 	"errors"
 	"net/http/httptest"
 	"testing"
@@ -23,7 +24,7 @@ func TestServeJSONError(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			rr := httptest.NewRecorder()
-			response.ServeJsonError(rr, tt.err)
+			response.ServeJsonError(context.Background(), rr, tt.err)
 
 			if rr.Body.String() != tt.want {
 				t.Errorf("ServeJSONError() = %v, want %v", rr.Body.String(), tt.want)

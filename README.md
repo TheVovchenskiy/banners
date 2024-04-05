@@ -1,6 +1,6 @@
 # Banner service <!-- omit from toc -->
 
-## Table of contents <!-- omit from toc -->
+## Contents <!-- omit from toc -->
 - [1. About](#1-about)
   - [1.1. Stack](#11-stack)
 - [2. Getting started](#2-getting-started)

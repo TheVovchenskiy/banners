@@ -3,9 +3,6 @@ package serverErrors
 import ()
 
 var APIErrors = map[error]APIError{
-	// ErrMethodNotAllowed: http.StatusMethodNotAllowed,
-	// ErrInvalidRequest:   http.StatusBadRequest,
-	// ErrInvalidBody:      http.StatusBadRequest,
 }
 
 func MapHTTPError(err error) (apiError APIError) {

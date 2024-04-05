@@ -37,8 +37,7 @@ definitions:
     type: object
   serverErrors.APIError:
     properties:
-      error:
-        type: string
+      error: {}
     type: object
 host: localhost:8080
 info:

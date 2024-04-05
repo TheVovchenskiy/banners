@@ -142,9 +142,7 @@ const docTemplate = `{
         "serverErrors.APIError": {
             "type": "object",
             "properties": {
-                "error": {
-                    "type": "string"
-                }
+                "error": {}
             }
         }
     }

@@ -6,17 +6,14 @@ import (
 )
 
 type APIError struct {
-	Code  int    `json:"-"`
-	Error string `json:"error"`
+	Code  int   `json:"-"`
+	Error error `json:"error"`
 }
 
 var (
-	APIErrInternal = APIError{http.StatusInternalServerError, ErrInternal.Error()}
+	APIErrInternal = APIError{http.StatusInternalServerError, ErrInternal}
 )
 
 var (
-	ErrInternal         = errors.New("internal server error")
-	// ErrMethodNotAllowed = errors.New("method not allowed")
-	// ErrInvalidRequest   = errors.New("invalid request")
-	// ErrInvalidBody      = errors.New("invalid body")
+	ErrInternal = errors.New("internal server error")
 )
