@@ -6,12 +6,12 @@ import (
 )
 
 type APIError struct {
-	Code  int   `json:"-"`
-	Error error `json:"error"`
+	Code  int    `json:"-"`
+	Error string `json:"error"`
 }
 
 var (
-	APIErrInternal = APIError{http.StatusInternalServerError, ErrInternal}
+	APIErrInternal = APIError{http.StatusInternalServerError, ErrInternal.Error()}
 )
 
 var (
