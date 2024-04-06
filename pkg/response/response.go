@@ -25,7 +25,14 @@ func ServerJsonData(ctx context.Context, w http.ResponseWriter, data any) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(js)
+	_, err = w.Write(js)
+	if err != nil {
+		contextLogger.WithFields(logrus.Fields{
+			"error": err,
+		}).
+			Info("cannot send data")
+	}
+
 }
 
 func ServeJsonError(ctx context.Context, w http.ResponseWriter, err error) {
@@ -42,5 +49,11 @@ func ServeJsonError(ctx context.Context, w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json;")
 	w.WriteHeader(apiErr.Code)
 	data, _ := json.Marshal(map[string]string{"error": apiErr.Error.Error()})
-	w.Write(data)
+	_, err = w.Write(data)
+	if err != nil {
+		contextLogger.WithFields(logrus.Fields{
+			"error": err,
+		}).
+			Info("cannot send error")
+	}
 }

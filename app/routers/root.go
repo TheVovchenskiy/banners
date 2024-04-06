@@ -9,6 +9,7 @@ import (
 	"github.com/TheVovchenskiy/banners/configs"
 	_ "github.com/TheVovchenskiy/banners/docs"
 	"github.com/TheVovchenskiy/banners/pkg/logging"
+	"github.com/sirupsen/logrus"
 
 	"github.com/TheVovchenskiy/banners/pkg/middleware"
 	"github.com/gorilla/mux"
@@ -17,6 +18,12 @@ import (
 )
 
 func Run() (err error) {
+	logFile, err := os.OpenFile(configs.LogsDir+configs.LogfileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	if err != nil {
+		return err
+	}
+	logging.InitLogger(logFile, configs.LogLevel)
+
 	swaggerRouter := mux.NewRouter()
 
 	swaggerRouter.PathPrefix("/swagger/").Handler(httpSwagger.Handler(
@@ -26,19 +33,21 @@ func Run() (err error) {
 		httpSwagger.DomID("swagger-ui"),
 	)).Methods(http.MethodGet)
 
-	go http.ListenAndServe(fmt.Sprintf(":%d", configs.SwaggerPort), swaggerRouter)
+	go func () {
+		err := http.ListenAndServe(fmt.Sprintf(":%d", configs.SwaggerPort), swaggerRouter)
+		if err != nil {
+			logging.Logger.WithFields(logrus.Fields{
+				"error": err,
+			}).
+				Error("error while running swagger router")
+		}
+	}()
 
 	db, err := app.GetPostgres()
 	if err != nil {
 		return
 	}
 	defer db.Close()
-
-	logFile, err := os.OpenFile(configs.LogsDir+configs.LogfileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
-	if err != nil {
-		return err
-	}
-	logging.InitLogger(logFile, configs.LogLevel)
 
 	rootRouter := mux.NewRouter().PathPrefix("/api/v1/").Subrouter()
 	rootRouter.Use(middleware.LoggerMiddleware)

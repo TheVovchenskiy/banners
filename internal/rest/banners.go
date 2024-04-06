@@ -1,6 +1,11 @@
 package rest
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/TheVovchenskiy/banners/pkg/queryManager"
+	"github.com/TheVovchenskiy/banners/pkg/response"
+)
 
 type BannerHandler struct {
 	// authUsecase *usecase.AuthUsecase
@@ -31,4 +36,37 @@ func NewBannerHandler() *BannerHandler {
 //	@Failure		500			{object} serverErrors.APIError "Internal server error"
 //	@Router			/banners [get]
 func (handler *BannerHandler) HandleGetBanners(w http.ResponseWriter, r *http.Request) {
+	_, err := queryManager.ParseUrlQuery(*r.URL, []queryManager.QueryParam{
+		{
+			Name:         "feature_id",
+			Type:         queryManager.IntType,
+			Required:     false,
+			DefaultValue: -1,
+		},
+		{
+			Name:         "tag_id",
+			Type:         queryManager.IntType,
+			Required:     false,
+			DefaultValue: -1,
+		},
+		{
+			Name:         "limit",
+			Type:         queryManager.IntType,
+			Required:     false,
+			DefaultValue: 10,
+		},
+		{
+			Name:         "offset",
+			Type:         queryManager.IntType,
+			Required:     false,
+			DefaultValue: 0,
+		},
+	})
+
+	if err != nil {
+		response.ServeJsonError(r.Context(), w, err)
+		return
+	}
+
+
 }

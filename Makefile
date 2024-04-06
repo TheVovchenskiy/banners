@@ -49,3 +49,7 @@ test:
 .PHONY: cover
 cover: test
 	go tool cover -func=c.out.tmp
+
+.PHONY: lint
+lint:
+	golangci-lint run

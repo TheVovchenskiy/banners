@@ -55,6 +55,7 @@ make install-tern
 ```bash
 make install-dotenv
 ```
+- [golangci-lint](https://golangci-lint.run/) - linter for golang
 
 ### 2.2. Docker
 
