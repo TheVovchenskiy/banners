@@ -41,6 +41,6 @@ func ServeJsonError(ctx context.Context, w http.ResponseWriter, err error) {
 
 	w.Header().Set("Content-Type", "application/json;")
 	w.WriteHeader(apiErr.Code)
-	data, _ := json.Marshal(apiErr)
+	data, _ := json.Marshal(map[string]string{"error": apiErr.Error.Error()})
 	w.Write(data)
 }

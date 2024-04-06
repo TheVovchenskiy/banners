@@ -1,19 +1,48 @@
 package serverErrors
 
-import ()
+import (
+	"errors"
+	"net/http"
+)
 
-var APIErrors = map[error]APIError{
+type APIError struct {
+	Error error
+	Code  int
 }
 
-func MapHTTPError(err error) (apiError APIError) {
-	if err == nil {
-		err = ErrInternal
+// var APIErrorStatusCodes = map[error]int{
+// 	ErrInternal:           http.StatusInternalServerError,
+// 	ErrInvalidQueryParams: http.StatusBadRequest,
+// }
+
+var AllowedErrors []APIError = []APIError{
+	{ErrInternal, http.StatusInternalServerError},
+	{ErrInvalidQueryParams, http.StatusBadRequest},
+}
+
+func MapHTTPError(err error) APIError {
+	for _, allowedErr := range AllowedErrors {
+		if errors.Is(err, allowedErr.Error) {
+			return allowedErr
+		}
 	}
 
-	apiError, ok := APIErrors[err]
-	if !ok {
-		apiError = APIErrInternal
+	return APIError{
+		Error: ErrInternal,
+		Code:  http.StatusInternalServerError,
 	}
+	// status, ok := APIErrorStatusCodes[err]
+	// if !ok {
+	// 	apiError = APIError{
+	// 		Error: ErrInternal,
+	// 		Code:  http.StatusInternalServerError,
+	// 	}
+	// } else {
+	// 	apiError = APIError{
+	// 		Code:  status,
+	// 		Error: err,
+	// 	}
+	// }
 
-	return
+	// return
 }
