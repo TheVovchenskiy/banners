@@ -1,5 +1,7 @@
 # Banner service <!-- omit from toc -->
 
+[![CI Pipeline](https://github.com/TheVovchenskiy/banners/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TheVovchenskiy/banners/actions/workflows/ci.yml)
+
 ## Contents <!-- omit from toc -->
 - [1. About](#1-about)
   - [1.1. Stack](#11-stack)
