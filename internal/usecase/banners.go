@@ -12,17 +12,20 @@ type BannerStorage interface {
 }
 
 type BannerUsecase struct {
+	bannerStorage BannerStorage
 }
 
-func NewBannerUsecase() *BannerUsecase {
-	return &BannerUsecase{}
+func NewBannerUsecase(bannerStorage BannerStorage) *BannerUsecase {
+	return &BannerUsecase{
+		bannerStorage: bannerStorage,
+	}
 }
 
 func (u *BannerUsecase) GetBanners(ctx context.Context, queryParams queryManager.ParsedQueryParams) ([]domain.Banner, error) {
-	banners, err := u.GetBanners(ctx, queryParams)
+	banners, err := u.bannerStorage.GetBanners(ctx, queryParams)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return banners, nil
 }
