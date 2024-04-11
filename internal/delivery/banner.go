@@ -1,19 +1,20 @@
-package rest
+package delivery
 
 import (
 	"net/http"
 
 	"github.com/TheVovchenskiy/banners/pkg/queryManager"
 	"github.com/TheVovchenskiy/banners/pkg/response"
+	"github.com/TheVovchenskiy/banners/internal/usecase"
 )
 
 type BannerHandler struct {
-	// authUsecase *usecase.AuthUsecase
+	bannerUsecase *usecase.BannerUsecase
 }
 
-func NewBannerHandler() *BannerHandler {
+func NewBannerHandler(bannerUsecase *usecase.BannerUsecase) *BannerHandler {
 	return &BannerHandler{
-		// authUsecase: usecase.NewAuthUsecase(authStorage),
+		bannerUsecase: bannerUsecase,
 	}
 }
 
@@ -30,13 +31,13 @@ func NewBannerHandler() *BannerHandler {
 //	@Param			limit		query	int				false	"Limit"
 //	@Param			offset		query	int				false	"Offset"
 //
-//	@Success		200			{array}	model.Banner	"An array of banners"
+//	@Success		200			{array}	domain.Banner	"An array of banners"
 //	@Failure		401			"User is unauthorized"
 //	@Failure		403			"Forbidden"
 //	@Failure		500			{object} serverErrors.APIError "Internal server error"
 //	@Router			/banners [get]
 func (handler *BannerHandler) HandleGetBanners(w http.ResponseWriter, r *http.Request) {
-	_, err := queryManager.ParseUrlQuery(*r.URL, []queryManager.QueryParam{
+	queryParams, err := queryManager.ParseUrlQuery(*r.URL, []queryManager.QueryParam{
 		{
 			Name:         "feature_id",
 			Type:         queryManager.IntType,
@@ -68,5 +69,11 @@ func (handler *BannerHandler) HandleGetBanners(w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	banners, err := handler.bannerUsecase.GetBanners(r.Context(), queryParams)
+	if err != nil {
+		response.ServeJsonError(r.Context(), w, err)
+		return
+	}
 
+	response.ServerJsonData(r.Context(), w, banners)
 }

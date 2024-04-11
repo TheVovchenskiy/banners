@@ -1,10 +1,10 @@
-package model
+package domain
 
 import "encoding/json"
 
-type Banners struct {
-	Items []Banner `json:"items"`
-}
+// type Banners struct {
+// 	Items []Banner `json:"items"`
+// }
 
 type Banner struct {
 	Id        uint            `json:"id"`

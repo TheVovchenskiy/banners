@@ -1,4 +1,4 @@
-package model
+package domain
 
 type Feature struct {
 	Id          uint   `json:"id"`

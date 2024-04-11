@@ -1,4 +1,4 @@
-package model
+package domain
 
 type Tag struct {
 	Id        uint   `json:"id"`

@@ -50,6 +50,9 @@ func Run() (err error) {
 	defer db.Close()
 
 	rootRouter := mux.NewRouter().PathPrefix("/api/v1/").Subrouter()
+
+	// MountAuthRouter()
+
 	rootRouter.Use(middleware.LoggerMiddleware)
 	rootRouter.Use(middleware.PanicRecoverMiddleware)
 
