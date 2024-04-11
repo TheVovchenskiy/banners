@@ -37,10 +37,6 @@ func (repo *BannerPsqlRepo) GetBanners(ctx context.Context, queryParams queryMan
 		LEFT JOIN public.tag t ON bt.tag_id = t.id`,
 		queryParams,
 		[]string{"feature_id", "tag_id"},
-		// []queryManager.JoinCondition{
-		// 	{Table: "public.banner_tag bt", JoinOn: "b.id = bt.bunner_id"},
-		// 	{Table: "public.tag t", JoinOn: "bt.tag_id = t.id"},
-		// },
 	)
 
 	rows, err := repo.db.Query(ctx, query, args...)

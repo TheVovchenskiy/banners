@@ -3,18 +3,19 @@ package delivery
 import (
 	"net/http"
 
+	"github.com/TheVovchenskiy/banners/internal/repository/psql"
+	"github.com/TheVovchenskiy/banners/internal/usecase"
 	"github.com/TheVovchenskiy/banners/pkg/queryManager"
 	"github.com/TheVovchenskiy/banners/pkg/response"
-	"github.com/TheVovchenskiy/banners/internal/usecase"
 )
 
 type BannerHandler struct {
 	bannerUsecase *usecase.BannerUsecase
 }
 
-func NewBannerHandler(bannerUsecase *usecase.BannerUsecase) *BannerHandler {
+func NewBannerHandler(bannerStorage psql.BannerPsqlRepo) *BannerHandler {
 	return &BannerHandler{
-		bannerUsecase: bannerUsecase,
+		bannerUsecase: usecase.NewBannerUsecase(&bannerStorage),
 	}
 }
 

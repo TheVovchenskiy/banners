@@ -8,6 +8,7 @@ import (
 	"github.com/TheVovchenskiy/banners/app"
 	"github.com/TheVovchenskiy/banners/configs"
 	_ "github.com/TheVovchenskiy/banners/docs"
+	"github.com/TheVovchenskiy/banners/internal/repository/psql"
 	"github.com/TheVovchenskiy/banners/pkg/logging"
 	"github.com/sirupsen/logrus"
 
@@ -49,9 +50,11 @@ func Run() (err error) {
 	}
 	defer db.Close()
 
+	bannerStorage := psql.NewBannerPg(db)
+
 	rootRouter := mux.NewRouter().PathPrefix("/api/v1/").Subrouter()
 
-	// MountAuthRouter()
+	MountAuthRouter(rootRouter, *bannerStorage)
 
 	rootRouter.Use(middleware.LoggerMiddleware)
 	rootRouter.Use(middleware.PanicRecoverMiddleware)
