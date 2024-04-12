@@ -14,7 +14,6 @@ import (
 
 	"github.com/TheVovchenskiy/banners/pkg/middleware"
 	"github.com/gorilla/mux"
-	_ "github.com/joho/godotenv/autoload"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
 
@@ -34,7 +33,7 @@ func Run() (err error) {
 		httpSwagger.DomID("swagger-ui"),
 	)).Methods(http.MethodGet)
 
-	go func () {
+	go func() {
 		err := http.ListenAndServe(fmt.Sprintf(":%d", configs.SwaggerPort), swaggerRouter)
 		if err != nil {
 			logging.Logger.WithFields(logrus.Fields{
@@ -44,17 +43,20 @@ func Run() (err error) {
 		}
 	}()
 
-	db, err := app.GetPostgres()
+	db, err := app.GetPostgres(configs.PgConfigData)
 	if err != nil {
 		return
 	}
 	defer db.Close()
 
 	bannerStorage := psql.NewBannerPg(db)
+	userStorage := psql.NewUserPg(db)
+	roleStorage := psql.NewRolePg(db)
 
 	rootRouter := mux.NewRouter().PathPrefix("/api/v1/").Subrouter()
 
-	MountAuthRouter(rootRouter, *bannerStorage)
+	MountBannerRouter(rootRouter, *bannerStorage)
+	MountAuthRouter(rootRouter, userStorage, roleStorage)
 
 	rootRouter.Use(middleware.LoggerMiddleware)
 	rootRouter.Use(middleware.PanicRecoverMiddleware)

@@ -10,6 +10,7 @@ type ContextKey string
 
 const (
 	ContextLoggerKey = ContextKey("logger")
+	ContextUserId    = ContextKey("user_id")
 )
 
 func GetContextLogger(ctx context.Context) *logrus.Entry {

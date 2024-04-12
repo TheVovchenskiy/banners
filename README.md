@@ -3,6 +3,7 @@
 [![CI Pipeline](https://github.com/TheVovchenskiy/banners/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/TheVovchenskiy/banners/actions/workflows/ci.yml)
 
 ## Contents <!-- omit from toc -->
+
 - [1. About](#1-about)
   - [1.1. Stack](#11-stack)
 - [2. Getting started](#2-getting-started)
@@ -14,6 +15,8 @@
 - [4. Additional problems and questions](#4-additional-problems-and-questions)
   - [4.1. Bad naming of endpoints](#41-bad-naming-of-endpoints)
   - [4.2. Additional fields](#42-additional-fields)
+  - [4.3. Additional endpoints](#43-additional-endpoints)
+    - [4.3.1. Auth](#431-auth)
 
 ## 1. About
 
@@ -37,6 +40,7 @@ PG_PASSWORD=<your_postgres_user_password>
 PG_DBNAME=<your_postgres_db_name>
 PG_PORT=<your_postgres_port>
 SECRET_KEY=<your_secret_key_to_generate_jwt>
+ADMIN_REGISTRATION_KEY=<your_admin_registration_key>
 ```
 
 To create this `.env` template simply run:
@@ -50,35 +54,43 @@ make dotenv
 Additional tools you may need to install for this project with commands to install them:
 
 - [tern](https://github.com/jackc/tern) - migration tool for PostgreSQL
+
 ```bash
 make install-tern
 ```
+
 - [dotenv-cli](https://www.npmjs.com/package/dotenv-cli) - cli tool to parse `.env` files and load environment variables
+
 ```bash
 make install-dotenv
 ```
+
 - [golangci-lint](https://golangci-lint.run/) - linter for golang
 
 ### 2.2. Docker
 
 To run all necessary Docker containers run:
+
 ```bash
 make compose-up
 ```
 
 ### 2.3. Migrations
 
-To update db to the latest migration  run:
+To update db to the latest migration run:
+
 ```bash
 make migrate
 ```
 
 To rollback one migration run:
+
 ```bash
 make rollback
 ```
 
 To create a new migration run:
+
 ```bash
 make create-migration name=<name_of_migration>
 ```
@@ -87,7 +99,7 @@ make create-migration name=<name_of_migration>
 
 ### 3.1. Documentation
 
-To get documentation on Banners API follow `http://localhost:8081/swagger/index.html` url while app is running.
+To get documentation on Banners API follow `/swagger/index.html` endpoint on port `8081`.
 
 ## 4. Additional problems and questions
 
@@ -103,3 +115,11 @@ To improve data readability I added additional fields for the following entities
 
 - `feature` - added field `description`
 - `tag` - added field `name`
+
+### 4.3. Additional endpoints
+
+In order to create fully working API I added some additional endpoints. For more information look [documentation](#31-documentation)
+
+#### 4.3.1. Auth
+
+- `/register` - register a new user

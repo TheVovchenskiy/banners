@@ -4,7 +4,8 @@ dotenv:
 	PG_PASSWORD=<your_postgres_user_password>\n\
 	PG_DBNAME=<your_postgres_db_name>\n\
 	PG_PORT=<your_postgres_port>\n\
-	SECRET_KEY=<your_secret_key_to_generate_jwt>" > .env
+	SECRET_KEY=<your_secret_key_to_generate_jwt>\n\
+	ADMIN_REGISTRATION_KEY=admin_registration_key" > .env
 
 .PHONY: install-tern
 install-tern:
@@ -30,12 +31,12 @@ migrate:
 rollback:
 	dotenv -- tern migrate -m migrations/ -d -1
 
-.PHONY: swag
-swag:
-	swag init -d "./cmd/banners/,./internal/rest,./model,./pkg/serverErrors" --parseInternal --parseDependency
+.PHONY: docs
+docs:
+	swag init -d "./cmd/banners/,./internal/delivery,./internal/domain,./pkg/serverErrors" --parseInternal --parseDependency
 
-.PHONY: fmt-docs
-fmt-docs:
+.PHONY: docs-fmt
+docs-fmt:
 	swag fmt -d "cmd/banners,."
 
 .PHONY: run

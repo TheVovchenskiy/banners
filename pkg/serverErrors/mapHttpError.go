@@ -3,6 +3,9 @@ package serverErrors
 import (
 	"errors"
 	"net/http"
+
+	"github.com/TheVovchenskiy/banners/internal/repository"
+	"github.com/TheVovchenskiy/banners/pkg/validator"
 )
 
 type APIError struct {
@@ -18,12 +21,21 @@ type APIError struct {
 var AllowedErrors []APIError = []APIError{
 	{ErrInternal, http.StatusInternalServerError},
 	{ErrInvalidQueryParams, http.StatusBadRequest},
+	{ErrInvalidBody, http.StatusBadRequest},
+	{validator.ErrInvalidUsername, http.StatusBadRequest},
+	{validator.ErrInvalidPassword, http.StatusBadRequest},
+	{validator.ErrInvalidRole, http.StatusBadRequest},
+	{validator.ErrInvalidAdminKey, http.StatusBadRequest},
+	{repository.ErrAccountAlreadyExists, http.StatusConflict},
 }
 
 func MapHTTPError(err error) APIError {
 	for _, allowedErr := range AllowedErrors {
 		if errors.Is(err, allowedErr.Error) {
-			return allowedErr
+			return APIError{
+				Error: err,
+				Code:  allowedErr.Code,
+			}
 		}
 	}
 

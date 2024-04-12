@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func MountAuthRouter(router *mux.Router, bannerStorage psql.BannerPsqlRepo) {
+func MountBannerRouter(router *mux.Router, bannerStorage psql.BannerPsqlRepo) {
 	handler := delivery.NewBannerHandler(bannerStorage)
 
 	router.Handle("/banners", http.HandlerFunc(handler.HandleGetBanners)).Methods("GET")

@@ -1,6 +1,6 @@
 basePath: /api/v1
 definitions:
-  model.Banner:
+  domain.Banner:
     properties:
       content:
         example: '{"title": "some_title", "text": "some_text", "url": "some_url"}'
@@ -16,13 +16,20 @@ definitions:
         type: boolean
       tags:
         items:
-          $ref: '#/definitions/model.Tag'
+          $ref: '#/definitions/domain.Tag'
         type: array
       updatedAt:
         format: date-time
         type: string
     type: object
-  model.Tag:
+  domain.Role:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  domain.Tag:
     properties:
       createdAt:
         format: date-time
@@ -35,8 +42,21 @@ definitions:
         format: date-time
         type: string
     type: object
+  domain.User:
+    properties:
+      accessToken:
+        type: string
+      id:
+        type: integer
+      role:
+        $ref: '#/definitions/domain.Role'
+      username:
+        type: string
+    type: object
   serverErrors.APIError:
     properties:
+      code:
+        type: integer
       error: {}
     type: object
 host: localhost:8080
@@ -80,7 +100,7 @@ paths:
           description: An array of banners
           schema:
             items:
-              $ref: '#/definitions/model.Banner'
+              $ref: '#/definitions/domain.Banner'
             type: array
         "401":
           description: User is unauthorized
@@ -93,4 +113,55 @@ paths:
       summary: Handle getting list of banners
       tags:
       - banners
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register new user or admin
+      parameters:
+      - description: Username of new user
+        in: body
+        name: username
+        required: true
+        schema:
+          type: string
+      - description: Password of new user
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      - description: 'Desired user''s role: either ''admin'' or ''user'''
+        in: body
+        name: role
+        required: true
+        schema:
+          type: string
+      - description: Admin's registration key
+        in: body
+        name: admin_key
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: An object wtih new user's info
+          schema:
+            $ref: '#/definitions/domain.User'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/serverErrors.APIError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/serverErrors.APIError'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/serverErrors.APIError'
+      summary: Handle registrating new users
+      tags:
+      - auth
 swagger: "2.0"

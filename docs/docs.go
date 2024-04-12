@@ -67,7 +67,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.Banner"
+                                "$ref": "#/definitions/domain.Banner"
                             }
                         }
                     },
@@ -85,10 +85,88 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/register": {
+            "post": {
+                "description": "Register new user or admin",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Handle registrating new users",
+                "parameters": [
+                    {
+                        "description": "Username of new user",
+                        "name": "username",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Password of new user",
+                        "name": "password",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Desired user's role: either 'admin' or 'user'",
+                        "name": "role",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "description": "Admin's registration key",
+                        "name": "admin_key",
+                        "in": "body",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An object wtih new user's info",
+                        "schema": {
+                            "$ref": "#/definitions/domain.User"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "schema": {
+                            "$ref": "#/definitions/serverErrors.APIError"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/serverErrors.APIError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/serverErrors.APIError"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "model.Banner": {
+        "domain.Banner": {
             "type": "object",
             "properties": {
                 "content": {
@@ -111,7 +189,7 @@ const docTemplate = `{
                 "tags": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.Tag"
+                        "$ref": "#/definitions/domain.Tag"
                     }
                 },
                 "updatedAt": {
@@ -120,7 +198,18 @@ const docTemplate = `{
                 }
             }
         },
-        "model.Tag": {
+        "domain.Role": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Tag": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -139,9 +228,29 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.User": {
+            "type": "object",
+            "properties": {
+                "accessToken": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "role": {
+                    "$ref": "#/definitions/domain.Role"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "serverErrors.APIError": {
             "type": "object",
             "properties": {
+                "code": {
+                    "type": "integer"
+                },
                 "error": {}
             }
         }
