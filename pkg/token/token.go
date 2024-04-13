@@ -32,33 +32,11 @@ func GenerateAccesToken(userID uint, username string, role string) (accessToken 
 	return
 }
 
-// func GenerateRefreshToken(userID int, username string) (refreshToken string, err error) {
-// 	refreshClaims := &Claims{
-// 		UserId:   fmt.Sprint(userID),
-// 		Username: username,
-// 		StandardClaims: jwt.StandardClaims{
-// 			ExpiresAt: RefreshTokenExpiresAt,
-// 		},
-// 	}
-
-// 	refreshToken, err = jwt.NewWithClaims(jwt.SigningMethodHS256, refreshClaims).SignedString(configs.RefreshJwtKey)
-// 	if err != nil {
-// 		return
-// 	}
-
-// 	return
-// }
-
 func GenerateToken(userID uint, username string, role string) (accessToken string, err error) {
 	accessToken, err = GenerateAccesToken(userID, username, role)
 	if err != nil {
 		return "", err
 	}
-
-	// refreshToken, err = GenerateRefreshToken(userID, username)
-	// if err != nil {
-	// 	return "", "", err
-	// }
 
 	return accessToken, nil
 }

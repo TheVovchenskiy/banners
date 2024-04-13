@@ -6,6 +6,7 @@ import (
 
 	"github.com/TheVovchenskiy/banners/internal/repository"
 	"github.com/TheVovchenskiy/banners/internal/usecase"
+	"github.com/TheVovchenskiy/banners/pkg/token"
 	"github.com/TheVovchenskiy/banners/pkg/validator"
 )
 
@@ -29,6 +30,8 @@ var AllowedErrors []APIError = []APIError{
 	{validator.ErrInvalidAdminKey, http.StatusBadRequest},
 	{repository.ErrAccountAlreadyExists, http.StatusConflict},
 	{usecase.ErrInvalidLoginData, http.StatusBadRequest},
+	{token.ErrInvalidToken, http.StatusForbidden},
+	{token.ErrAuthorizationHeaderRequired, http.StatusForbidden},
 }
 
 func MapHTTPError(err error) APIError {

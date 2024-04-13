@@ -18,10 +18,7 @@ func ServerJsonData(ctx context.Context, w http.ResponseWriter, data any) {
 		ServeJsonError(ctx, w, serverErrors.ErrInternal)
 	}
 
-	contextLogger.WithFields(logrus.Fields{
-		"data": js,
-	}).
-		Info("serving json data")
+	contextLogger.Info("serving json data")
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")

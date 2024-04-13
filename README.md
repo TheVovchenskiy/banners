@@ -17,6 +17,7 @@
   - [4.2. Additional fields](#42-additional-fields)
   - [4.3. Additional endpoints](#43-additional-endpoints)
     - [4.3.1. Auth](#431-auth)
+  - [4.4. Authorization token header](#44-authorization-token-header)
 
 ## 1. About
 
@@ -124,3 +125,11 @@ In order to create fully working API I added some additional endpoints. For more
 
 - `/register` - register a new user
 - `/login` - login as an existing user
+
+### 4.4. Authorization token header
+
+Header with authorization token must have following format:
+
+```bash
+Authorization: Bearer <your_access_token_here>
+```

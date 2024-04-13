@@ -33,7 +33,7 @@ func (repo *BannerPsqlRepo) GetBanners(ctx context.Context, queryParams queryMan
 			t.updated_at
 		FROM
 			public.banner b
-		LEFT JOIN public.banner_tag bt ON b.id = bt.bunner_id
+		LEFT JOIN public.banner_tag bt ON b.id = bt.banner_id
 		LEFT JOIN public.tag t ON bt.tag_id = t.id`,
 		queryParams,
 		[]string{"feature_id", "tag_id"},

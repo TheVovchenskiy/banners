@@ -10,24 +10,30 @@ import (
 	"github.com/TheVovchenskiy/banners/pkg/contextManager"
 	"github.com/TheVovchenskiy/banners/pkg/response"
 	"github.com/TheVovchenskiy/banners/pkg/token"
+	"github.com/TheVovchenskiy/banners/pkg/utils"
 
 	"github.com/golang-jwt/jwt"
 )
 
-func TokenVerify(strict bool, next http.Handler) http.Handler {
+const (
+	bearer_schema = "Bearer"
+)
+
+func AuthMiddleware(allowedRoles []string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorizationHeader := r.Header.Get("Authorization")
 		if authorizationHeader == "" {
-			if !strict {
-				next.ServeHTTP(w, r)
-				return
-			}
 			response.ServeJsonError(r.Context(), w, token.ErrAuthorizationHeaderRequired)
 			return
 		}
 
 		bearerToken := strings.Split(authorizationHeader, " ")
 		if len(bearerToken) != 2 {
+			response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
+			return
+		}
+
+		if bearerToken[0] != bearer_schema {
 			response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
 			return
 		}
@@ -42,13 +48,13 @@ func TokenVerify(strict bool, next http.Handler) http.Handler {
 			return configs.JwtKey, nil
 		})
 
-		if err != nil {
+		if err != nil || !accessToken.Valid {
 			response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
 			return
 		}
 
-		if !accessToken.Valid {
-			response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
+		if !utils.In(claims.Role, allowedRoles) {
+			w.WriteHeader(http.StatusForbidden)
 			return
 		}
 
