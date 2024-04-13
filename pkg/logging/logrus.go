@@ -17,3 +17,10 @@ func InitLogger(logFile *os.File, logLevel logrus.Level) {
 	Logger.SetFormatter(jsonFormatter)
 	Logger.SetLevel(logLevel)
 }
+
+func LogError(logger *logrus.Entry, err error, while string) {
+	logger.WithFields(logrus.Fields{
+		"error": err,
+	}).
+		Error(while)
+}

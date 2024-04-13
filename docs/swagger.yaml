@@ -117,29 +117,18 @@ paths:
     post:
       consumes:
       - application/json
-      description: Register new user or admin
+      description: Login user
       parameters:
-      - description: Username of new user
+      - description: Username
         in: body
         name: username
         required: true
         schema:
           type: string
-      - description: Password of new user
+      - description: User's password
         in: body
         name: password
         required: true
-        schema:
-          type: string
-      - description: 'Desired user''s role: either ''admin'' or ''user'''
-        in: body
-        name: role
-        required: true
-        schema:
-          type: string
-      - description: Admin's registration key
-        in: body
-        name: admin_key
         schema:
           type: string
       produces:
@@ -153,15 +142,11 @@ paths:
           description: Bad request
           schema:
             $ref: '#/definitions/serverErrors.APIError'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/serverErrors.APIError'
         "500":
           description: Internal server error
           schema:
             $ref: '#/definitions/serverErrors.APIError'
-      summary: Handle registrating new users
+      summary: Handle login
       tags:
       - auth
 swagger: "2.0"

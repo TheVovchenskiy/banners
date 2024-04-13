@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/TheVovchenskiy/banners/internal/repository"
+	"github.com/TheVovchenskiy/banners/internal/usecase"
 	"github.com/TheVovchenskiy/banners/pkg/validator"
 )
 
@@ -27,6 +28,7 @@ var AllowedErrors []APIError = []APIError{
 	{validator.ErrInvalidRole, http.StatusBadRequest},
 	{validator.ErrInvalidAdminKey, http.StatusBadRequest},
 	{repository.ErrAccountAlreadyExists, http.StatusConflict},
+	{usecase.ErrInvalidLoginData, http.StatusBadRequest},
 }
 
 func MapHTTPError(err error) APIError {

@@ -2,9 +2,14 @@ package usecase
 
 import (
 	"context"
+	"errors"
 
 	"github.com/TheVovchenskiy/banners/configs"
 	"github.com/TheVovchenskiy/banners/internal/domain"
+	"github.com/TheVovchenskiy/banners/internal/repository"
+	"github.com/TheVovchenskiy/banners/pkg/contextManager"
+	"github.com/TheVovchenskiy/banners/pkg/hash"
+	"github.com/TheVovchenskiy/banners/pkg/logging"
 	"github.com/TheVovchenskiy/banners/pkg/token"
 	"github.com/TheVovchenskiy/banners/pkg/validator"
 	"github.com/google/uuid"
@@ -12,11 +17,12 @@ import (
 
 type RoleStorage interface {
 	GetAllRoles(ctx context.Context) ([]string, error)
+	GetRoleNameById(ctx context.Context, id uint) (string, error)
 }
 
 type UserStorage interface {
 	StoreUser(ctx context.Context, user *domain.User) (uint, uint, error)
-	// GetUserByUsername(ctx context.Context, username string) (domain.User, error)
+	GetUserByUsername(ctx context.Context, username string) (domain.User, error)
 }
 
 type AuthUsecase struct {
@@ -59,25 +65,31 @@ func (u *AuthUsecase) RegisterUser(ctx context.Context, registerInput domain.Reg
 	return user, nil
 }
 
-// func (u *AuthUsecase) LoginUser(loginInput domain.LoginInput) (*domain.User, error) {
-// 	loginInput.Trim()
-// 	user, err := u.userStorage.GetUserByUsername(context.Background(), loginInput.Username)
-// 	if err != nil {
-// 		if errors.Is(err, repository.ErrNoUserFound) {
-// 			err = ErrInvalidLoginData
-// 		}
-// 		return nil, err
-// 	}
+func (u *AuthUsecase) LoginUser(ctx context.Context, loginInput domain.LoginInput) (*domain.User, error) {
+	contextLogger := contextManager.GetContextLogger(ctx)
+	loginInput.Trim()
+	user, err := u.userStorage.GetUserByUsername(context.Background(), loginInput.Username)
+	if err != nil {
+		if errors.Is(err, repository.ErrNoUserFound) {
+			logging.LogError(contextLogger, err, "while getting user by username")
+			err = ErrInvalidLoginData
+		}
+		return nil, err
+	}
 
-// 	if !hash.MatchPasswords(user.PasswordHash, loginInput.Password, user.Salt) {
-// 		return nil, ErrInvalidLoginData
-// 	}
+	user.Role.Name, err = u.roleStorage.GetRoleNameById(ctx, user.Role.Id)
+	if err != nil {
+		return nil, err
+	}
 
-// 	user.AccessToken, err = token.GenerateAccesToken(user.Id, loginInput.Username)
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	if !hash.MatchPasswords(user.PasswordHash, loginInput.Password, user.Salt) {
+		return nil, ErrInvalidLoginData
+	}
 
-// 	return &user, nil
+	user.AccessToken, err = token.GenerateAccesToken(user.Id, loginInput.Username, user.Role.Name)
+	if err != nil {
+		return nil, err
+	}
 
-// }
+	return &user, nil
+}

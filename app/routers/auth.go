@@ -12,5 +12,5 @@ func MountAuthRouter(router *mux.Router, userStorage usecase.UserStorage, roleSt
 	handler := delivery.NewAuthHandler(userStorage, roleStorage)
 
 	router.Handle("/register", http.HandlerFunc(handler.HandleRegistration)).Methods("POST")
-	// router.Handle("/login", http.HandlerFunc(handler.HandleLogin)).Methods("POST")
+	router.Handle("/login", http.HandlerFunc(handler.HandleLogin)).Methods("POST")
 }

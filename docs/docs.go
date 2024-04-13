@@ -88,7 +88,7 @@ const docTemplate = `{
         },
         "/register": {
             "post": {
-                "description": "Register new user or admin",
+                "description": "Login user",
                 "consumes": [
                     "application/json"
                 ],
@@ -98,10 +98,10 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "Handle registrating new users",
+                "summary": "Handle login",
                 "parameters": [
                     {
-                        "description": "Username of new user",
+                        "description": "Username",
                         "name": "username",
                         "in": "body",
                         "required": true,
@@ -110,27 +110,10 @@ const docTemplate = `{
                         }
                     },
                     {
-                        "description": "Password of new user",
+                        "description": "User's password",
                         "name": "password",
                         "in": "body",
                         "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Desired user's role: either 'admin' or 'user'",
-                        "name": "role",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "Admin's registration key",
-                        "name": "admin_key",
-                        "in": "body",
                         "schema": {
                             "type": "string"
                         }
@@ -145,12 +128,6 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad request",
-                        "schema": {
-                            "$ref": "#/definitions/serverErrors.APIError"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/serverErrors.APIError"
                         }

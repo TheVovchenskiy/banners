@@ -60,32 +60,38 @@ func (handler *AuthHandler) HandleRegistration(w http.ResponseWriter, r *http.Re
 	response.ServerJsonData(r.Context(), w, user)
 }
 
-// func (handler *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
-// 	defer r.Body.Close()
-// 	contextLogger := contextManager.GetContextLogger(r.Context())
+// HandleLogin godoc
+//
+//	@Summary		Handle login
+//	@Description	Login user
+//	@Tags			auth
+//	@Accept			json
+//	@Produce		json
+//
+//	@Param			username	body		string					true	"Username"
+//	@Param			password	body		string					true	"User's password"
+//
+//	@Success		200			{object}	domain.User				"An object wtih new user's info"
+//	@Failure		400			{object}	serverErrors.APIError	"Bad request"
+//	@Failure		500			{object}	serverErrors.APIError	"Internal server error"
+//	@Router			/register [post]
+func (handler *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
+	defer r.Body.Close()
 
-// 	decoder := json.NewDecoder(r.Body)
-// 	loginInput := new(domain.LoginInput)
-// 	err := decoder.Decode(loginInput)
-// 	if err != nil {
-// 		contextLogger.WithFields(logrus.Fields{
-// 			"error": err,
-// 		}).
-// 			Error("error while decoding request body")
-// 		response.ServeJsonError(w, serverErrors.ErrInvalidBody)
-// 		return
-// 	}
+	decoder := json.NewDecoder(r.Body)
+	loginInput := new(domain.LoginInput)
+	err := decoder.Decode(loginInput)
+	if err != nil {
+		err = fmt.Errorf("%w: unable to decode body", serverErrors.ErrInvalidBody)
+		response.ServeJsonError(r.Context(), w, err)
+		return
+	}
+	user, err := handler.authUsecase.LoginUser(r.Context(), *loginInput)
+	if err != nil {
+		response.ServeJsonError(r.Context(), w, err)
+		return
+	}
 
-// 	user, err := handler.authUsecase.LoginUser(*loginInput)
-// 	if err != nil {
-// 		contextLogger.WithFields(logrus.Fields{
-// 			"error": err,
-// 		}).
-// 			Error("error while logging user")
-// 		response.ServeJsonError(w, err)
-// 		return
-// 	}
+	response.ServerJsonData(r.Context(), w, user)
 
-// 	response.MarshalAndSend(w, user)
-
-// }
+}

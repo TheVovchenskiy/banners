@@ -123,3 +123,4 @@ In order to create fully working API I added some additional endpoints. For more
 #### 4.3.1. Auth
 
 - `/register` - register a new user
+- `/login` - login as an existing user

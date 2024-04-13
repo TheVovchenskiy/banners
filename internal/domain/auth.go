@@ -15,6 +15,7 @@ type RegisterInput struct {
 
 func (i *RegisterInput) Trim() {
 	i.Username = strings.TrimSpace(i.Username)
+	i.Role = strings.TrimSpace(i.Role)
 }
 
 func (i *RegisterInput) ToUser(salt string) *User {
