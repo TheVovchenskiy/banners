@@ -8,7 +8,6 @@ import (
 
 	"github.com/TheVovchenskiy/banners/configs"
 	"github.com/TheVovchenskiy/banners/pkg/contextManager"
-	"github.com/TheVovchenskiy/banners/pkg/response"
 	"github.com/TheVovchenskiy/banners/pkg/token"
 	"github.com/TheVovchenskiy/banners/pkg/utils"
 
@@ -23,18 +22,21 @@ func AuthMiddleware(allowedRoles []string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authorizationHeader := r.Header.Get("Authorization")
 		if authorizationHeader == "" {
-			response.ServeJsonError(r.Context(), w, token.ErrAuthorizationHeaderRequired)
+			// response.ServeJsonError(r.Context(), w, token.ErrAuthorizationHeaderRequired)
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
 
 		bearerToken := strings.Split(authorizationHeader, " ")
 		if len(bearerToken) != 2 {
-			response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
+			w.WriteHeader(http.StatusForbidden)
+			// response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
 			return
 		}
 
 		if bearerToken[0] != bearer_schema {
-			response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
+			w.WriteHeader(http.StatusForbidden)
+			// response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
 			return
 		}
 
@@ -49,7 +51,8 @@ func AuthMiddleware(allowedRoles []string, next http.Handler) http.Handler {
 		})
 
 		if err != nil || !accessToken.Valid {
-			response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
+			w.WriteHeader(http.StatusForbidden)
+			// response.ServeJsonError(r.Context(), w, token.ErrInvalidToken)
 			return
 		}
 

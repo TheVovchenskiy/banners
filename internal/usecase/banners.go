@@ -9,6 +9,7 @@ import (
 
 type BannerStorage interface {
 	GetBanners(ctx context.Context, queryParams queryManager.ParsedQueryParams) ([]domain.Banner, error)
+	AddBanner(ctx context.Context, banner domain.CreateBanner) (domain.Banner, error)
 }
 
 type BannerUsecase struct {
@@ -28,4 +29,13 @@ func (u *BannerUsecase) GetBanners(ctx context.Context, queryParams queryManager
 	}
 
 	return banners, nil
+}
+
+func (u *BannerUsecase) AddBanner(ctx context.Context, banner domain.CreateBanner) (domain.Banner, error) {
+	createdBanner, err := u.bannerStorage.AddBanner(ctx, banner)
+	if err != nil {
+		return domain.Banner{}, err
+	}
+
+	return createdBanner, nil
 }

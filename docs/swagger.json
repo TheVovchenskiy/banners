@@ -26,9 +26,11 @@
                 "parameters": [
                     {
                         "type": "string",
+                        "example": "Bearer your_access_token",
                         "description": "Admin's token",
-                        "name": "token",
-                        "in": "header"
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     },
                     {
                         "type": "integer",
@@ -63,6 +65,87 @@
                             "items": {
                                 "$ref": "#/definitions/domain.Banner"
                             }
+                        }
+                    },
+                    "401": {
+                        "description": "User is unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/serverErrors.APIError"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create new banner",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "banners"
+                ],
+                "summary": "Handle creating new banner",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "Bearer your_access_token",
+                        "description": "Admin's token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Ids of tags",
+                        "name": "tagIds",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    },
+                    {
+                        "example": 1,
+                        "description": "Feature's id",
+                        "name": "featureId",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "example": "\"{\\\"title\\\": \\\"some_title\\\", \\\"text\\\": \\\"some_text\\\", \\\"url\\\": \\\"some_url\\\"}\"",
+                        "description": "Banner's content",
+                        "name": "content",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Banner"
+                        }
+                    },
+                    "400": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/serverErrors.APIError"
                         }
                     },
                     "401": {

@@ -13,5 +13,6 @@ func MountBannerRouter(router *mux.Router, bannerStorage psql.BannerPsqlRepo) {
 	handler := delivery.NewBannerHandler(bannerStorage)
 
 	router.Handle("/banners", middleware.AuthMiddleware([]string{"admin"}, http.HandlerFunc(handler.HandleGetBanners))).Methods("GET")
-	// router.Handle("/banners/{id}", http.HandlerFunc(handler.HandleLogin)).Methods("POST")
+	router.Handle("/banners", middleware.AuthMiddleware([]string{"admin"}, http.HandlerFunc(handler.HandlePostBanners))).Methods("POST")
+	// router.Handle("/banners/{id}", http.HandlerFunc(handler.HandleLogin)).Methods("GET")
 }

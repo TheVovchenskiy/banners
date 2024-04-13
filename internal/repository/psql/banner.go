@@ -2,9 +2,11 @@ package psql
 
 import (
 	"context"
+	"time"
 
 	"github.com/TheVovchenskiy/banners/internal/domain"
 	"github.com/TheVovchenskiy/banners/pkg/queryManager"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -82,4 +84,75 @@ func (repo *BannerPsqlRepo) GetBanners(ctx context.Context, queryParams queryMan
 	}
 
 	return banners, nil
+}
+
+func (repo *BannerPsqlRepo) AddBanner(ctx context.Context, banner domain.CreateBanner) (newBanner domain.Banner, err error) {
+	tx, err := repo.db.BeginTx(ctx, pgx.TxOptions{})
+	if err != nil {
+		return
+	}
+
+	defer func() {
+		if err != nil {
+			return
+		}
+
+		if err = tx.Rollback(ctx); err != nil && err != pgx.ErrTxClosed {
+			return
+		}
+
+		err = nil
+	}()
+
+	insertBannerQuery := `INSERT INTO
+				public.banner (feature_id, "content", is_active)
+			VALUES
+				($1, $2, $3)
+			RETURNING id, created_at, updated_at`
+
+	var createdAt, updatedAt time.Time
+	err = tx.QueryRow(ctx, insertBannerQuery, banner.FeatureId, banner.Content, banner.IsActive).Scan(
+		&newBanner.Id,
+		&createdAt,
+		&updatedAt,
+	)
+
+	newBanner.CreatedAt = createdAt.Format(time.RFC1123Z)
+	newBanner.UpdatedAt = updatedAt.Format(time.RFC1123Z)
+	if err != nil {
+		return
+	}
+	newBanner.FeatureId = banner.FeatureId
+	newBanner.Content = banner.Content
+	newBanner.IsActive = banner.IsActive
+
+	insertBannerTagQuery := `INSERT INTO 
+		public.banner_tag (banner_id, tag_id)
+	VALUES
+		($1, $2)
+	RETURNING tag_id, (SELECT t."name" FROM public.tag t WHERE t.id = $2)`
+
+	tags := []domain.Tag{}
+
+	for _, tagId := range banner.TagIds {
+		var tag domain.Tag
+		err := tx.QueryRow(ctx, insertBannerTagQuery, newBanner.Id, tagId).Scan(
+			&tag.Id,
+			&tag.Name,
+		)
+		if err != nil {
+			return domain.Banner{}, err
+		}
+
+		tags = append(tags, tag)
+	}
+
+	newBanner.Tags = tags
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		return
+	}
+
+	return
 }

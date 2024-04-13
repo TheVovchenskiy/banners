@@ -2,10 +2,6 @@ package domain
 
 import "encoding/json"
 
-// type Banners struct {
-// 	Items []Banner `json:"items"`
-// }
-
 type Banner struct {
 	Id        uint            `json:"id"`
 	FeatureId uint            `json:"featureId"`
@@ -14,4 +10,11 @@ type Banner struct {
 	IsActive  bool            `json:"isActive"`
 	CreatedAt string          `json:"createdAt,omitempty" format:"date-time"`
 	UpdatedAt string          `json:"updatedAt,omitempty" format:"date-time"`
+}
+
+type CreateBanner struct {
+	TagIds    []uint          `json:"tagIds"`
+	FeatureId uint            `json:"featureId"`
+	Content   json.RawMessage `json:"content"`
+	IsActive  bool            `json:"isActive"`
 }

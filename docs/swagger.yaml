@@ -74,8 +74,10 @@ paths:
       description: Get all banners with filtering by feature and/or tag
       parameters:
       - description: Admin's token
+        example: Bearer your_access_token
         in: header
-        name: token
+        name: Authorization
+        required: true
         type: string
       - description: Feature's id
         in: query
@@ -111,6 +113,61 @@ paths:
           schema:
             $ref: '#/definitions/serverErrors.APIError'
       summary: Handle getting list of banners
+      tags:
+      - banners
+    post:
+      consumes:
+      - application/json
+      description: Create new banner
+      parameters:
+      - description: Admin's token
+        example: Bearer your_access_token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Ids of tags
+        in: body
+        name: tagIds
+        required: true
+        schema:
+          items:
+            type: integer
+          type: array
+      - description: Feature's id
+        example: 1
+        in: body
+        name: featureId
+        required: true
+        schema:
+          type: integer
+      - description: Banner's content
+        example: '"{\"title\": \"some_title\", \"text\": \"some_text\", \"url\": \"some_url\"}"'
+        in: body
+        name: content
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Created
+          schema:
+            $ref: '#/definitions/domain.Banner'
+        "400":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/serverErrors.APIError'
+        "401":
+          description: User is unauthorized
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/serverErrors.APIError'
+      summary: Handle creating new banner
       tags:
       - banners
   /register:
